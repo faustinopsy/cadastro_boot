@@ -3,9 +3,13 @@ package br.senai.sp.informatica.cadastro.model;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +28,10 @@ public class Cliente {
 	private String telefone;
 	private String email;
 	private boolean desativado;
-	private List<servico> servicos;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "ServicosPrestados",
+	joinColumns = { @JoinColumn(name="idCliente")},
+	inverseJoinColumns = { @JoinColumn(name="idServico")})
+	private List<Servico> servicos;
 	
 }
