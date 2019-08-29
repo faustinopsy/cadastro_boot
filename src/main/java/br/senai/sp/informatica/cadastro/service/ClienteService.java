@@ -1,5 +1,6 @@
 package br.senai.sp.informatica.cadastro.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,23 @@ public List<Cliente> getClientes(){
 			.stream().filter(cliente -> !cliente.isDesativado())
 			.collect(Collectors.toList());
 	
+}
+
+public Cliente getCliente(int idCliente) {
+	return repo.findById(idCliente)
+			.orElse(null);
+}
+
+public boolean removeCliente(int[] lista) {
+	Arrays.stream(lista).forEach(idCliente -> {
+		Cliente cliente = repo.findById(idCliente)
+				.orElse(null);
+		if(cliente != null) {
+			cliente.setDesativado(true);
+			repo.save(cliente);
+		}
+	});
+	return true;
 }
 
 }
