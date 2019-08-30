@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
@@ -15,6 +16,7 @@ public class Servico {
 	private Integer idServico;
 	private String nome;
 	private boolean desativado;
+	@Transient
 	private boolean selecionado;
 	
 	

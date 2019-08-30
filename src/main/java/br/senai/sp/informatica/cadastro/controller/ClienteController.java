@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.senai.sp.informatica.cadastro.model.Cliente;
 import br.senai.sp.informatica.cadastro.service.ClienteService;
+import br.senai.sp.informatica.cadastro.service.ServicoService;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +21,11 @@ public class ClienteController {
     @Autowired
 	private ClienteService clienteService;
 
+    @Autowired
+    private ServicoService servicoService;
+    
+    
+    
     @PostMapping("/cadastra")
 public ResponseEntity<Object> cadastra(@RequestBody Cliente cliente){
     	clienteService.salvar(cliente);
@@ -48,5 +54,17 @@ public ResponseEntity<Object> cadastra(@RequestBody Cliente cliente){
     				}else {
     					return ResponseEntity.unprocessableEntity().build();
     				}
+    }
+    
+    @RequestMapping("/carregaServicos/{idCliente}")
+    public ResponseEntity<Object> carregaSerrvicos(@PathVariable("idCliente")int idCliente){
+    	Cliente cliente = clienteService.getCliente(idCliente);
+    	
+    	if(cliente !=null) {
+    		return ResponseEntity.ok(servicoService.getServicos(cliente));
+    	}else {
+    		return ResponseEntity.notFound().build();
+    	}
+    	
     }
 }
