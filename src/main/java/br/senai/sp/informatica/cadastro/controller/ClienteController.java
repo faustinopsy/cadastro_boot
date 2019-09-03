@@ -1,6 +1,9 @@
 package br.senai.sp.informatica.cadastro.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.senai.sp.informatica.cadastro.model.Cliente;
+import br.senai.sp.informatica.cadastro.model.Servico;
+import br.senai.sp.informatica.cadastro.model.valueobject.ListaDeServicos;
 import br.senai.sp.informatica.cadastro.service.ClienteService;
 import br.senai.sp.informatica.cadastro.service.ServicoService;
 
@@ -67,4 +72,48 @@ public ResponseEntity<Object> cadastra(@RequestBody Cliente cliente){
     	}
     	
     }
+    
+    @PostMapping("/selecionaServico")
+    public ResponseEntity<Object> selecionaServico(@RequestBody ListaDeServicos lista){
+    	
+    	Cliente cliente =clienteService.getCliente(lista.getIdCliente());
+    	
+    	
+    	if(cliente != null) {
+    		if(cliente.getServicos()==null)
+    			cliente.setServicos(new ArrayList<>());
+    		
+    		List<Servico> aDeletar = cliente.getServicos()
+.stream().filter(servicoDoCliente -> !Arrays.stream(lista.getServicos())
+		         .filter(servicosEnviados -> 
+		         servicosEnviados.getIdServico() == servicoDoCliente.getIdServico())
+		         .findFirst().get().isSelecionado())
+				
+				.collect(Collectors.toList());
+			
+    		aDeletar.stream().forEach(servico -> 
+    		cliente.getServicos().removeIf(servicoDoCliente -> 
+    		servicoDoCliente.getIdServico()==servico.getIdServico())); 
+    		
+    		
+    		List<Servico> aIncluir = Arrays.stream(lista.getServicos())
+    				.filter(Servico::isSelecionado)
+    				.filter(servicoSelecionado -> !cliente.getServicos()
+    						.contains(servicoSelecionado))
+    				.collect(Collectors.toList());
+    		
+    		aIncluir.stream().forEach(servico -> cliente.getServicos().add(servico));
+    		clienteService.salvar(cliente);
+    		
+    		
+    		return ResponseEntity.ok().build();
+    	}else {
+    		
+    		
+    		return ResponseEntity.unprocessableEntity().build();
+    	}
+    	
+    	
+    }
+    
 }
