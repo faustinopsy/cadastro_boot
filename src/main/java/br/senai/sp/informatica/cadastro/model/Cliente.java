@@ -10,7 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+import br.senai.sp.informatica.cadastro.model.validacao.Logradouro;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +27,13 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idCliente;
+	@Size(min=3, max=150, message="O nome deve ter no minimo 3 caracteres e no máximo 150 caracteres")
 	private String nome;
+	@Logradouro(max=150,message="O endereço é inválido")
 	private String endereco;
+	@Pattern(regexp="(9[0-9]{4}|[1-9][0-9]{3})-[0-9]{4}", message="O nº de telefone é inválido")
 	private String telefone;
+	@Email(message="O Email é inválido")
 	private String email;
 	private boolean desativado;
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -34,4 +42,7 @@ public class Cliente {
 	inverseJoinColumns = { @JoinColumn(name="idServico")})
 	private List<Servico> servicos;
 	
+	public void setEndereco(String endereco) {
+		this.endereco = endereco.trim();
+	}
 }

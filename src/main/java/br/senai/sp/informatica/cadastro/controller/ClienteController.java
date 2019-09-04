@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +35,14 @@ public class ClienteController {
     
     
     @PostMapping("/cadastra")
-public ResponseEntity<Object> cadastra(@RequestBody Cliente cliente){
+public ResponseEntity<Object> cadastra(@RequestBody @Valid Cliente cliente, BindingResult result){
+    	if(result.hasErrors()) {
+    		return ResponseEntity.unprocessableEntity().build();
+    	}else {
+    	
     	clienteService.salvar(cliente);
     	return ResponseEntity.ok().build();
+    	}
 }
     @GetMapping("/listaCliente")
     public ResponseEntity<List<Cliente>> listaCliente(){
