@@ -15,7 +15,13 @@ import br.senai.sp.informatica.cadastro.repo.UsuarioRepo;
 public class UsuarioService {
 	@Autowired
 	private UsuarioRepo repo;
-	
+	/*
+	 * 
+	 * @echo off
+start node_modules\.bin\serve -s webapp
+start chrome http://localhost:5000
+exit
+	 */
 	public void salvar(Usuario usuario) {
 		repo.save(usuario);
 	}
