@@ -35,12 +35,11 @@ public class UsuarioService {
 
 	
 	
-	public boolean removeUsuario(String Nome) {
-		Usuario usuario = repo.getOne(Nome)
+	public  boolean removeUsuario(String Nome) {
+		Usuario usuario = repo.findById(Nome)
 				.orElse(null);
 		if(usuario != null) {
-			usuario.setHabilitado(true);
-			repo.save(usuario);
+			repo.delete(usuario);
 			return true;
 		}else {
 	return false;

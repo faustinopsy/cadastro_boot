@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+import br.senai.sp.informatica.cadastro.model.validacao.Senha;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Usuario {
 	@Column(name="username")
 	@Size(min=3, max=150, message="O nome deve ter no minimo 3 caracteres e no máximo 150 caracteres")
 	private String nome;
+	@Senha(message="A senha deve ter 1 numero e 1 letra maisculas e 1 simbolo")
 	@Column(name="password")
 	private String senha;
 	@Column(name="enabled")
