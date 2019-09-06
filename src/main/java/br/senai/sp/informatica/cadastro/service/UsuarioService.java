@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,18 @@ start node_modules\.bin\serve -s webapp
 start chrome http://localhost:5000
 exit
 	 */
-	public void salvar(Usuario usuario) {
+	public void salvar(@Valid Usuario usuario) {
+		Usuario old_usuario;
+		
+		if(!usuario.getOld_nome().equalsIgnoreCase(usuario.getNome())) {
+			old_usuario=getUsuario(usuario.getOld_nome());
+			removeUsuario(usuario.getOld_nome());
+		}else {
+			old_usuario= getUsuario(usuario.getNome());
+		}
+		if(old_usuario != null) {
+			usuario.setSenha(old_usuario.getSenha());
+		}
 		repo.save(usuario);
 	}
 
@@ -35,7 +48,7 @@ exit
 	}
 
 	public Usuario getUsuario(String Nome) {
-		return repo.getOne(Nome)
+		return repo.findById(Nome)
 				.orElse(null);
 	}
 

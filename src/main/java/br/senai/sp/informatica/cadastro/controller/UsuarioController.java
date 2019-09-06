@@ -51,6 +51,7 @@ public class UsuarioController {
 	    	Usuario usuario = usuarioService.getUsuario(Nome);
 	    	
 	    	if(usuario != null) {
+	    		usuario.setOld_nome(usuario.getNome());
 	    		return ResponseEntity.ok(usuario);
 	    	}else {
 	    		return ResponseEntity.notFound().build();
