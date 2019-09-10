@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.senai.sp.informatica.cadastro.model.Cliente;
 import br.senai.sp.informatica.cadastro.model.Servico;
 import br.senai.sp.informatica.cadastro.service.ServicoService;
 

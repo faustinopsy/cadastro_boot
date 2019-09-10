@@ -38,8 +38,8 @@ public class Cliente {
 	private boolean desativado;
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "ServicosPrestados",
-	joinColumns = { @JoinColumn(name="idCliente")},
-	inverseJoinColumns = { @JoinColumn(name="idServico")})
+		joinColumns = { @JoinColumn(name="idCliente")},
+		inverseJoinColumns = { @JoinColumn(name="idServico")})
 	private List<Servico> servicos;
 	
 	public void setEndereco(String endereco) {

@@ -16,7 +16,7 @@ public class LogradouroValidator implements ConstraintValidator<Logradouro, Stri
 		if(value == null || value.length() > tamanhoMaximo) {
 			return false;
 		}else {
-			String[] logradouro =value.split("");
+			String[] logradouro =value.split(" ");
 			
 			if(logradouro[0].equalsIgnoreCase("Rua")
 			||logradouro[0].equalsIgnoreCase("av")

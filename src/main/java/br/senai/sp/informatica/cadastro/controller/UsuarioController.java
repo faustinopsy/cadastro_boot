@@ -30,8 +30,8 @@ public class UsuarioController {
 	 public ResponseEntity<Object> cadastra(@RequestBody @Valid Usuario usuario, BindingResult result){
 	     	if(result.hasErrors()) {
 	     		return ResponseEntity.unprocessableEntity()
-.contentType(MediaType.APPLICATION_JSON_UTF8)
-.body(JsonError.build(result));
+					.contentType(MediaType.APPLICATION_JSON_UTF8)
+					.body(JsonError.build(result));
 	     	}else {
 	     	
 	     	usuarioService.salvar(usuario);
