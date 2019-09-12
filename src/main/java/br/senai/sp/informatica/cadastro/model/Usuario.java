@@ -33,4 +33,8 @@ public class Usuario {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public boolean isAdministrador() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -36,6 +36,9 @@ exit
 		}else {
 			old_usuario= getUsuario(usuario.getNome());
 		}
+		
+		auth.save(new Autorizacao(usuario.getNome(),usuario.isAdministrador() ?"ROLE_ADMIN" : "ROLE_USER"));
+		
 		if(old_usuario != null) {
 			usuario.setSenha(old_usuario.getSenha());
 		}
