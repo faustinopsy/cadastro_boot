@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ public class ServicoController {
 	@Autowired
 	private ServicoService servicoService;
 	
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@PostMapping("/salvaServico")
 	public ResponseEntity<Object> cadastra(@RequestBody @Valid Servico servico, BindingResult result){
 		if(result.hasErrors()) {
@@ -39,6 +41,7 @@ public class ServicoController {
     	return ResponseEntity.ok(servicoService.getServicos());
     	
     }    
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@GetMapping("/editaServico/{id}")
     public ResponseEntity<Object> editaServico(@PathVariable("id") int idServico){
 		Servico servico = servicoService.getServico(idServico);
@@ -49,6 +52,7 @@ public class ServicoController {
     		return ResponseEntity.notFound().build();
     	}
     }
+	@Secured({"ROLE_ADMIN", "ROLE_USER"})
 	@PostMapping("/removeServico/{idServico}")
     public ResponseEntity<Object> removeCliente(@PathVariable("idServico") int idServico){
     	if(servicoService.removeServico(idServico)) {

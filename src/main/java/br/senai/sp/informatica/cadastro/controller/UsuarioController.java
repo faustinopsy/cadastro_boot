@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.senai.sp.informatica.cadastro.component.JsonError;
+import br.senai.sp.informatica.cadastro.model.Autorizacao;
 import br.senai.sp.informatica.cadastro.model.Cliente;
 import br.senai.sp.informatica.cadastro.model.Usuario;
 import br.senai.sp.informatica.cadastro.service.UsuarioService;
@@ -85,7 +86,7 @@ public class UsuarioController {
 	
 	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping("leAutorizacoes/{nome}")
-	public ResponseEntity<GrantedAuthority> getAutorizacoes(@PathVariable("nome") String nome){
+	public ResponseEntity<Autorizacao> getAutorizacoes(@PathVariable("nome") String nome){
 		
 		return ResponseEntity.ok(usuarioService.getAutorizacoes(nome));
 	}

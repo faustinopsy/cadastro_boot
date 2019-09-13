@@ -7,8 +7,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.senai.sp.informatica.cadastro.component.SecurityFacade;
 import br.senai.sp.informatica.cadastro.model.Autorizacao;
 import br.senai.sp.informatica.cadastro.model.Usuario;
 import br.senai.sp.informatica.cadastro.repo.AutorizacaoRepo;
@@ -20,6 +22,8 @@ public class UsuarioService {
 	private UsuarioRepo repo;
 	@Autowired
 	private AutorizacaoRepo auth;
+	@Autowired
+	private SecurityFacade security;
 	/*
 	 * 
 	 * @echo off
@@ -37,10 +41,13 @@ exit
 			old_usuario= getUsuario(usuario.getNome());
 		}
 		
-		auth.save(new Autorizacao(usuario.getNome(),usuario.isAdministrador() ?"ROLE_ADMIN" : "ROLE_USER"));
+		auth.save(new Autorizacao(usuario.getNome(),
+				usuario.isAdministrador() ?"ROLE_ADMIN" : "ROLE_USER"));
 		
 		if(old_usuario != null) {
 			usuario.setSenha(old_usuario.getSenha());
+		}else {
+			usuario.setSenha(new BCryptPasswordEncoder().encode(usuario.getSenha()));
 		}
 		repo.save(usuario);
 	}
@@ -49,21 +56,37 @@ exit
 	public List<Usuario> getUsuario(){
 		return repo.findAll()
 				.stream().filter(usuario -> usuario.isHabilitado())
+				.filter(usuario -> !usuario.getNome().equals(security.getUserName()))
+				.map(usuario -> atribuiPerfil(usuario))
 				.collect(Collectors.toList());
 		
 	}
-
+private Usuario atribuiPerfil(Usuario usuario) {
+	Autorizacao autorizacao = getAutorizacoes(usuario.getNome());
+	if(autorizacao !=null) {
+		usuario.setAdministrador(autorizacao.getPerfil().endsWith("ADMIN"));
+	}else {
+		usuario.setAdministrador(false);
+	}
+	return usuario;
+}
 	public Usuario getUsuario(String Nome) {
-		return repo.findById(Nome)
-				.orElse(null);
+		Usuario usuario =repo.findById(Nome).orElse(null);
+		if(usuario !=null) {
+			usuario= atribuiPerfil(usuario);
+		}
+		return usuario;
 	}
 
 	
 	
 	public  boolean removeUsuario(String Nome) {
-		Usuario usuario = repo.findById(Nome)
-				.orElse(null);
+		Usuario usuario = repo.findById(Nome).orElse(null);
 		if(usuario != null) {
+			
+			Autorizacao autorizacao = getAutorizacoes(Nome);
+			if(autorizacao != null) auth.delete(autorizacao);
+			
 			repo.delete(usuario);
 			return true;
 		}else {
@@ -72,7 +95,7 @@ exit
 }
 
 
-	private Autorizacao getAutorizacoes(String nome) {
+	public Autorizacao getAutorizacoes(String nome) {
 		// TODO Auto-generated method stub
 		return auth.findById(nome).orElse(null);
 	}

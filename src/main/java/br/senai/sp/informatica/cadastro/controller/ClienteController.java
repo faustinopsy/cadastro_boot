@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ public class ClienteController {
     
     
     
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @PostMapping("/cadastra")
 public ResponseEntity<Object> cadastra(@RequestBody @Valid Cliente cliente, BindingResult result){
     	if(result.hasErrors()) {
@@ -47,12 +49,14 @@ public ResponseEntity<Object> cadastra(@RequestBody @Valid Cliente cliente, Bind
     		return ResponseEntity.ok().build();
     	}
 }
+    
     @GetMapping("/listaCliente")
     public ResponseEntity<List<Cliente>> listaCliente(){
     	
     	return ResponseEntity.ok(clienteService.getClientes());
     	
     }
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @GetMapping("/editaCliente/{id}")
     public ResponseEntity<Object> editaCliente(@PathVariable("id") int idCliente){
     	Cliente cliente = clienteService.getCliente(idCliente);
@@ -63,6 +67,7 @@ public ResponseEntity<Object> cadastra(@RequestBody @Valid Cliente cliente, Bind
     		return ResponseEntity.notFound().build();
     	}
     }
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @PostMapping("/removeCliente")
     public ResponseEntity<Object> removeCliente(@RequestBody int[] lista){
     	if(clienteService.removeCliente(lista)) {
@@ -71,7 +76,7 @@ public ResponseEntity<Object> cadastra(@RequestBody @Valid Cliente cliente, Bind
     					return ResponseEntity.unprocessableEntity().build();
     				}
     }
-    
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @RequestMapping("/carregaServicos/{idCliente}")
     public ResponseEntity<Object> carregaSerrvicos(@PathVariable("idCliente")int idCliente){
     	Cliente cliente = clienteService.getCliente(idCliente);
@@ -83,7 +88,7 @@ public ResponseEntity<Object> cadastra(@RequestBody @Valid Cliente cliente, Bind
     	}
     	
     }
-    
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @PostMapping("/selecionaServico")
     public ResponseEntity<Object> selecionaServico(@RequestBody ListaDeServicos lista){
     	

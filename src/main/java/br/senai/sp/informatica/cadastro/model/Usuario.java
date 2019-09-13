@@ -37,4 +37,9 @@ public class Usuario {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public void setAdministrador(boolean endsWith) {
+		// TODO Auto-generated method stub
+		
+	}
 }
