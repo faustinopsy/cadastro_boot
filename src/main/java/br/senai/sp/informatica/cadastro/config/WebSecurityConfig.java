@@ -13,7 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import br.senai.sp.informatica.cadastro.filter.JwtAutheticationFilter;
 
 
 @Configuration
@@ -26,6 +29,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 @Autowired
 private DataSource dataSource;
 
+	@Bean
+	public JwtAutheticationFilter jwtFilter() {
+		return new JwtAutheticationFilter();
+		
+	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
@@ -37,7 +46,10 @@ private DataSource dataSource;
 					"/api/carregaServicos","/api/logout").permitAll()
 			.anyRequest().authenticated().and()
 			.logout()
-			.logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"));
+			.logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
+			.and()
+			.addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+		
 		
 	}
 	
