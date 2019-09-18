@@ -43,7 +43,7 @@ public class JwtAutheticationFilter  extends OncePerRequestFilter{
 				Usuario usuario = usuarioService.getUsuario(userId);
 				//cria o token de autenticação para o ambiente de segurnaca
 				UsernamePasswordAuthenticationToken autenticacao =
-						new UsernamePasswordAuthenticationToken(usuario, Collections.singletonList(
+						new UsernamePasswordAuthenticationToken(usuario, null, Collections.singletonList(
 								usuarioService.getAutorizacoes(userId) ));
 				//registra a URL da requisição web no token
 				autenticacao.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -53,6 +53,7 @@ public class JwtAutheticationFilter  extends OncePerRequestFilter{
 		}catch (Exception erro) {
 			logger.error("Não foi possível registrar a Autenticação ", erro);
 		}
+		filterChain.doFilter(request, response);
 		
 	}
 	private String getJwtFromRequest(HttpServletRequest request) {

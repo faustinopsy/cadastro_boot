@@ -62,7 +62,7 @@ exit
 		
 	}
 private Usuario atribuiPerfil(Usuario usuario) {
-	Autorizacao autorizacao = getAutorizacoes(usuario.getNome());
+	Autorizacao autorizacao = getAutorizacao(usuario.getNome());
 	if(autorizacao !=null) {
 		usuario.setAdministrador(autorizacao.getPerfil().endsWith("ADMIN"));
 	}else {
@@ -84,7 +84,7 @@ private Usuario atribuiPerfil(Usuario usuario) {
 		Usuario usuario = repo.findById(Nome).orElse(null);
 		if(usuario != null) {
 			
-			Autorizacao autorizacao = getAutorizacoes(Nome);
+			Autorizacao autorizacao = getAutorizacao(Nome);
 			if(autorizacao != null) auth.delete(autorizacao);
 			
 			repo.delete(usuario);
@@ -95,13 +95,12 @@ private Usuario atribuiPerfil(Usuario usuario) {
 }
 
 
-	public Autorizacao getAutorizacoes(String nome) {
-		// TODO Auto-generated method stub
+	public Autorizacao getAutorizacao(String nome) {
 		return auth.findById(nome).orElse(null);
 	}
 
-	public GrantedAuthority getAutorizacoes1(String nome) {
-		Autorizacao autorizacao =getAutorizacoes(nome);
+	public GrantedAuthority getAutorizacoes(String nome) {
+		Autorizacao autorizacao =getAutorizacao(nome);
 		
 		return autorizacao != null? () -> autorizacao.getPerfil() : null;
 	}
